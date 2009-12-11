@@ -83,11 +83,6 @@ function _dev_profile_dev_modules() {
  * Implementation of hook_profile_task_list().
  */
 function dev_profile_profile_task_list() {
-  /*
-  if (_atrium_installer_language_selected()) {
-    $tasks['intranet-translation-batch'] = st('Download and import translation');
-  }
-  */
   $tasks['dev-modules-batch'] = st('Install features modules');
   $tasks['dev-configure-batch'] = st('Configure');
   return $tasks;
@@ -170,27 +165,12 @@ function dev_profile_profile_tasks(&$task, $url) {
 }
 
 /**
- * Check whether we are installing in a language other than English
- */
-/*
-function _atrium_installer_language_selected() {
-  global $install_locale;
-  return !empty($install_locale) && ($install_locale != 'en');
-}
-*/
-
-/**
  * Configuration. First stage.
  */
 function _dev_profile_intranet_configure() {
   global $install_locale;
 
   /*
-  // Disable the english locale if using a different default locale.
-  if (!empty($install_locale) && ($install_locale != 'en')) {
-    db_query("DELETE FROM {languages} WHERE language = 'en'");
-  }
-
   // Remove default input filter formats
   $result = db_query("SELECT * FROM {filter_formats} WHERE name IN ('%s', '%s')", 'Filtered HTML', 'Full HTML');
   while ($row = db_fetch_object($result)) {
@@ -270,21 +250,12 @@ function _dev_profile_intranet_configure_check() {
  */
 function _dev_profile_intranet_configure_finished($success, $results) {
   variable_set('atrium_install', 1);
-  // Get out of this batch and let the installer continue. If loaded translation,
-  // we skip the locale remaining batch and move on to the next.
-  // However, if we didn't make it with the translation file, or they downloaded
-  // an unsupported language, we let the standard locale do its work.
-  //if (variable_get('atrium_translate_done', 0)) {
-  //  variable_set('install_task', 'finished');
-  //}
-  //else {
-    variable_set('install_task', 'profile-finished');
+  variable_set('install_task', 'profile-finished');
     
     
-    // turn off default blocks
+  // turn off default blocks
     
-    db_query("UPDATE {blocks} SET status = 0, region = '%s' WHERE theme = '%s'", '', 'garland');
-  //} 
+  db_query("UPDATE {blocks} SET status = 0, region = '%s' WHERE theme = '%s'", '', 'garland'); 
 }
 
 /**
