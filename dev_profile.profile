@@ -83,8 +83,8 @@ function _dev_profile_dev_modules() {
  * Implementation of hook_profile_task_list().
  */
 function dev_profile_profile_task_list() {
-  $tasks['dev-modules-batch'] = st('Install features modules');
-  $tasks['dev-configure-batch'] = st('Configure');
+  $tasks['dev-modules-batch'] = st('Install modules for features');
+  $tasks['dev-configure-batch'] = st('Configure installation');
   return $tasks;
 }
 
@@ -97,25 +97,7 @@ function dev_profile_profile_tasks(&$task, $url) {
   // Just in case some of the future tasks adds some output
   $output = '';
   
-  
-  // Download and install translation if needed
   if ($task == 'profile') {
-    /*
-    if (_atrium_installer_language_selected() && module_exists('atrium_translate')) {
-      module_load_install('atrium_translate');
-      if ($batch = atrium_translate_create_batch($install_locale, 'install')) {
-        $batch['finished'] = '_atrium_installer_translate_batch_finished';
-        // Remove temporary variables and set install task
-        variable_del('install_locale_batch_components');
-        variable_set('install_task', 'intranet-translation-batch');
-        batch_set($batch);
-        batch_process($url, $url);
-        // Jut for cli installs. We'll never reach here on interactive installs.
-        return;
-      }
-    }
-    // If we reach here, means no language install, move on to the next task
-  */
     $task = 'dev-modules';
   }
 
@@ -125,7 +107,7 @@ function dev_profile_profile_tasks(&$task, $url) {
     $output = _batch_page();
   }
   
-  // Install some more modules and maybe localization helpers too
+  // Install some more modules
   if ($task == 'dev-modules') {
     $modules = _dev_profile_dev_modules();
     $files = module_rebuild_cache();
@@ -249,12 +231,9 @@ function _dev_profile_intranet_configure_check() {
  * @todo Handle error condition
  */
 function _dev_profile_intranet_configure_finished($success, $results) {
-  variable_set('atrium_install', 1);
   variable_set('install_task', 'profile-finished');
     
-    
-  // turn off default blocks
-    
+  // turn off default blocks  
   db_query("UPDATE {blocks} SET status = 0, region = '%s' WHERE theme = '%s'", '', 'garland'); 
 }
 
@@ -268,26 +247,12 @@ function _dev_profile_profile_batch_finished($success, $results) {
 }
 
 /**
- * Finished callback for the first locale import batch.
- *
- * Advance installer task to the configure screen.
- */
-/*
-function _dev_profile_translate_batch_finished($success, $results) {
-  include_once 'includes/locale.inc';
-  // Let the installer now we've already imported locales
-  variable_set('atrium_translate_done', 1);
-  variable_set('install_task', 'intranet-modules');
-  _locale_batch_language_finished($success, $results);
-}
-*/
-/**
- * Alter some forms implementing hooks in system module namespace
- * 
- * This is a trick for hooks to get called, otherwise we cannot alter forms
+ * FORM ALTERS
  */
 
-// Set Dev Profile as default profile
+/**
+ * Set the default installation profile.
+ */
 function system_form_install_select_profile_form_alter(&$form, $form_state) {
   foreach($form['profile'] as $key => $element) {
     $form['profile'][$key]['#value'] = 'dev_profile';
@@ -295,16 +260,12 @@ function system_form_install_select_profile_form_alter(&$form, $form_state) {
 }
 
 /**
- * Set English as default language.
- * 
- * If no language selected, the installation crashes. I guess English should be the default 
- * but it isn't in the default install. @todo research, core bug?
+ * Set the default language to English.
  */
-/*
 function system_form_install_select_locale_form_alter(&$form, $form_state) {
   $form['locale']['en']['#value'] = 'en';
 }
-*/
+
 /**
  * Alter the install profile configuration form and provide timezone location options.
  */
