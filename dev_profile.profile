@@ -56,8 +56,6 @@ function dev_profile_profile_modules() {
     'token',
     // Path Auto
     'pathauto',
-    // Custom Dev Blog (contains hook_strongarm() for our features
-    'dev_blog',
   );
 
   return $modules;
