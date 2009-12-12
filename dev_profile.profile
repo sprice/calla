@@ -56,6 +56,8 @@ function dev_profile_profile_modules() {
     'token',
     // Path Auto
     'pathauto',
+    // Content profile
+    'content_profile',
   );
 
   return $modules;
@@ -70,8 +72,6 @@ function _dev_profile_dev_modules() {
     'strongarm',
     // CCK
     'content', 'content_permissions', 'nodereference', 'optionwidgets', 'number', 'text',
-    // Content profile
-    'content_profile',
     // Features
     'blog_feature', 'team_feature',
     // Others
@@ -151,6 +151,14 @@ function dev_profile_profile_tasks(&$task, $url) {
  */
 function _dev_profile_intranet_configure() {
   global $install_locale;
+
+  // Create content profile for user 1
+  variable_get('admin_full_name', NULL);
+  
+  //
+  // create profile
+  // @todo
+  variable_del('admin_full_name');
 
   /*
   // Remove default input filter formats
@@ -270,6 +278,17 @@ function system_form_install_select_locale_form_alter(&$form, $form_state) {
  * Alter the install profile configuration form and provide timezone location options.
  */
 function system_form_install_configure_form_alter(&$form, $form_state) {
+  
+  $form['admin_account']['account']['fullname'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Full name',
+    '#maxlength' => '60',
+    '#description' => 'The first and last name of the administrator.',
+    '#required' => '1',
+    '#weight' => '-9',
+  );
+  array_push($form['#submit'], '_dev_profile_install_configure_submit');
+  
   if (function_exists('date_timezone_names') && function_exists('date_timezone_update_site')) {
     $form['server_settings']['date_default_timezone']['#access'] = FALSE;
     $form['server_settings']['#element_validate'] = array('date_timezone_update_site');
@@ -282,4 +301,11 @@ function system_form_install_configure_form_alter(&$form, $form_state) {
       '#required' => TRUE,
     );
   }
+}
+
+/**
+ * Additional submit hook for adding the admin users full name
+ */
+function _dev_profile_install_configure_submit($form, &$form_state) {
+  variable_set('admin_full_name', $form_state['values']['account']['fullname']);
 }
