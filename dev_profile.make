@@ -23,6 +23,8 @@ projects[singular][location] = http://code.developmentseed.org/fserver
 projects[tao][type] = "theme"
 projects[tao][download][type] = "git"
 projects[tao][download][url] = "git://github.com/sprice/tao.git"
-; Patched
-projects[simpletest][version] = "2.9"
-projects[simpletest][patch] = "http://drupalcode.org/viewvc/drupal/contributions/modules/simpletest/D6-core-simpletest.patch?revision=1.1.2.1&view=co"
+; Needs patching
+;projects[simpletest][patch] = "http://drupalcode.org/viewvc/drupal/contributions/modules/simpletest/D6-core-simpletest.patch?revision=1.1.2.1&view=co"
+projects[context][subdir] = "tests"
+projects[context][version] = "2.0-beta7"
+projects[context][patch] = "http://drupal.org/files/issues/context_test_setup.patch"
