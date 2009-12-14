@@ -25,5 +25,5 @@ projects[tao][download][type] = "git"
 projects[tao][download][url] = "git://github.com/sprice/tao.git"
 ; Patched
 projects[simpletest][subdir] = "contrib"
-projects[simpletest][version] = "6.x-2.9"
+projects[simpletest][version] = "2.9"
 projects[simpletest][patch] = "http://drupalcode.org/viewvc/drupal/contributions/modules/simpletest/D6-core-simpletest.patch?revision=1.1.2.1&view=co"
