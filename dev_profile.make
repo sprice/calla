@@ -15,7 +15,9 @@ projects[] = diff
 projects[] = context
 projects[] = spaces
 projects[] = purl
+projects[] = schema
 projects[] = install_profile_api
+projects[] = simpletest
 projects[blog_feature][location] = "http://haikungfu.com/fserver"
 projects[team_feature][location] = "http://haikungfu.com/fserver"
 projects[rubik][location] = http://code.developmentseed.org/fserver
@@ -25,6 +27,6 @@ projects[tao][download][type] = "git"
 projects[tao][download][url] = "git://github.com/sprice/tao.git"
 ; Needs patching
 ;projects[simpletest][patch] = "http://drupalcode.org/viewvc/drupal/contributions/modules/simpletest/D6-core-simpletest.patch?revision=1.1.2.1&view=co"
-projects[context][subdir] = "tests"
-projects[context][version] = "2.0-beta7"
-projects[context][patch] = "http://drupal.org/files/issues/context_test_setup.patch"
+;projects[context][subdir] = "tests"
+;projects[context][version] = "2.0-beta7"
+;projects[context][patch] = "http://drupal.org/files/issues/context_test_setup.patch"
