@@ -50,8 +50,6 @@ function dev_profile_profile_modules() {
     'spaces',
     // PURL
     'purl',
-    // Image
-    // 'imageapi', 'imageapi_gd', 'imagecache', 'imagecache_ui',
     // Token
     'token',
     // Path Auto
