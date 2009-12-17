@@ -73,7 +73,7 @@ function _dev_profile_dev_modules() {
     // Features
     'blog_feature', 'team_feature',
     // Others
-    'diff',
+    'diff', 'wysiwyg_features',
   );
 }
 
