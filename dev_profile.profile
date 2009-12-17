@@ -38,8 +38,6 @@ function dev_profile_profile_modules() {
     'backup_migrate',
     // Views
     'views',
-    // Install Profile API
-    'install_profile_api',
     // Features
     'features',
     // Context
@@ -56,6 +54,8 @@ function dev_profile_profile_modules() {
     'pathauto',
     // Content profile
     'content_profile',
+    // Wysiwyg API
+    'wysiwyg',
   );
 
   return $modules;

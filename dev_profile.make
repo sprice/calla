@@ -43,5 +43,5 @@ projects[tao][download][url] = "git://github.com/sprice/tao.git"
 
 ; Libraries
 libraries[ckeditor][download][type] = "get"
-libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%203.0.1/ckeditor_3.0.1.tar.gz"
-libraries[ckeditor][directory_name = "ckeditor"
+libraries[ckeditor][download][url] = "http://downloads.sourceforge.net/project/fckeditor/FCKeditor/2.6.5/FCKeditor_2.6.5.tar.gz"
+libraries[ckeditor][directory_name = "fckeditor"
