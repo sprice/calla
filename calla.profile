@@ -63,10 +63,10 @@ function calla_profile_modules() {
 /**
  * Returns an array list of features (and supporting) modules.
  */
-function _calla_dev_modules() {
+function _calla_config_modules() {
   return array(
     // CCK
-    'content', 'content_permissions', 'nodereference', 'optionwidgets', 'number', 'text',
+    'content', 'content_permissions', 'nodereference', 'number', 'optionwidgets', 'text',
     // Diff
     'diff',
     // Features
@@ -84,8 +84,8 @@ function _calla_dev_modules() {
  * Implementation of hook_profile_task_list().
  */
 function calla_profile_task_list() {
-  $tasks['dev-modules-batch'] = st('Install modules for features');
-  $tasks['dev-configure-batch'] = st('Configure installation');
+  $tasks['calla-modules-batch'] = st('Install core distribution');
+  $tasks['calla-configure-batch'] = st('Configure distribution');
   return $tasks;
 }
 
@@ -99,18 +99,18 @@ function calla_profile_tasks(&$task, $url) {
   $output = '';
   
   if ($task == 'profile') {
-    $task = 'dev-modules';
+    $task = 'calla-modules';
   }
 
   // We are running a batch task for this profile so basically do nothing and return page
-  if (in_array($task, array('dev-modules-batch', 'dev-configure-batch'))) {
+  if (in_array($task, array('calla-modules-batch', 'calla-configure-batch'))) {
     include_once 'includes/batch.inc';
     $output = _batch_page();
   }
   
   // Install some more modules
-  if ($task == 'dev-modules') {
-    $modules = _calla_dev_modules();
+  if ($task == 'calla-modules') {
+    $modules = _calla_config_modules();
     $files = module_rebuild_cache();
     // Create batch
     foreach ($modules as $module) {
@@ -120,9 +120,9 @@ function calla_profile_tasks(&$task, $url) {
     $batch['title'] = st('Installing @drupal', array('@drupal' => drupal_install_profile_name()));
     $batch['error_message'] = st('The installation has encountered an error.');
 
-    // Start a batch, switch to 'dev-modules-batch' task. We need to
+    // Start a batch, switch to 'calla-modules-batch' task. We need to
     // set the variable here, because batch_process() redirects.
-    variable_set('install_task', 'dev-modules-batch');
+    variable_set('install_task', 'calla-modules-batch');
     batch_set($batch);
     batch_process($url, $url);
     // Jut for cli installs. We'll never reach here on interactive installs.
@@ -132,12 +132,12 @@ function calla_profile_tasks(&$task, $url) {
   // Run additional configuration tasks
   // @todo Review all the cache/rebuild options at the end, some of them may not be needed
   // @todo Review for localization, the time zone cannot be set that way either
-  if ($task == 'intranet-configure') {
+  if ($task == 'calla-configure') {
     $batch['title'] = st('Configuring @drupal', array('@drupal' => drupal_install_profile_name()));
-    $batch['operations'][] = array('_calla_intranet_configure', array());
-    $batch['operations'][] = array('_calla_intranet_configure_check', array());
-    $batch['finished'] = '_calla_intranet_configure_finished';
-    variable_set('install_task', 'dev-configure-batch');
+    $batch['operations'][] = array('_calla_configure', array());
+    $batch['operations'][] = array('_calla_configure_check', array());
+    $batch['finished'] = '_calla_configure_finished';
+    variable_set('install_task', 'calla-configure-batch');
     batch_set($batch);
     batch_process($url, $url);
     // Jut for cli installs. We'll never reach here on interactive installs.
@@ -150,7 +150,7 @@ function calla_profile_tasks(&$task, $url) {
 /**
  * Configuration. First stage.
  */
-function _calla_intranet_configure() {
+function _calla_configure() {
   global $install_locale;
 
   // Remove default input filter formats
@@ -192,7 +192,7 @@ function _calla_intranet_configure() {
 /**
  * Configuration. Second stage.
  */
-function _calla_intranet_configure_check() {
+function _calla_configure_check() {
   // Rebuild key tables/caches
   module_rebuild_cache(); // Detects the newly added bootstrap modules
   node_access_rebuild();
@@ -211,7 +211,7 @@ function _calla_intranet_configure_check() {
  * 
  * @todo Handle error condition
  */
-function _calla_intranet_configure_finished($success, $results) {
+function _calla_configure_finished($success, $results) {
   variable_set('install_task', 'profile-finished');
     
   // turn off default blocks  
@@ -224,7 +224,7 @@ function _calla_intranet_configure_finished($success, $results) {
  * Advance installer task to language import.
  */
 function _calla_profile_batch_finished($success, $results) {
-  variable_set('install_task', 'intranet-configure');
+  variable_set('install_task', 'calla-configure');
 }
 
 /**
