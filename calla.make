@@ -1,34 +1,39 @@
 core = 6.x
 
 ; Contrib
+projects[admin][subdir] = "contrib"
 projects[admin][version] = "2.0-alpha2"
-projects[] = backup_migrate
-projects[] = cck
-projects[] = codefilter
-projects[] = content_profile
-projects[] = context
-projects[] = diff
-projects[] = features
-projects[] = libraries
-projects[] = pathauto
-projects[] = purl
-projects[] = markdown
-projects[] = schema
-projects[] = spaces
-projects[] = strongarm
-projects[] = token
-projects[] = typogrify
-projects[] = views
-projects[] = wysiwyg
+projects[backup_migrate][subdir] = "contrib" 
+projects[cck][subdir] = "contrib"
+projects[codefilter][subdir] = "contrib"
+projects[content_profile][subdir] = "contrib"
+projects[context][subdir] = "contrib"
+projects[diff][subdir] = "contrib"
+projects[features][subdir] = "contrib"
+projects[libraries][subdir] = "contrib"
+projects[pathauto][subdir] = "contrib"
+projects[purl][subdir] = "contrib"
+projects[markdown][subdir] = "contrib"
+projects[schema][subdir] = "contrib"
+projects[spaces][subdir] = "contrib"
+projects[strongarm][subdir] = "contrib"
+projects[token][subdir] = "contrib"
+projects[typogrify][subdir] = "contrib"
+projects[views][subdir] = "contrib"
+projects[wysiwyg][subdir] = "contrib"
 
 ; Custom
+projects[wysiwyg_features][subdir] = "custom"
 projects[wysiwyg_features][type] = "module"
 projects[wysiwyg_features][download][type] = "git"
 projects[wysiwyg_features][download][url] = "git://github.com/sprice/wysiwyg_features.git"
 
 ; Features
+projects[calla_core][subdir] = "features"
 projects[calla_core][location] = "http://haikungfu.com/fserver"
+projects[calla_blog][subdir] = "features"
 projects[calla_blog][location] = "http://haikungfu.com/fserver"
+projects[calla_team][subdir] = "features"
 projects[calla_team][location] = "http://haikungfu.com/fserver"
 
 ; Themes
