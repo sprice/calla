@@ -29,35 +29,36 @@ function dev_profile_profile_modules() {
     'menu',
     'node',
     'path',
-    'system', 
+    'system',
     'taxonomy',
     'user',
-    // Admin Menu
-    'admin_menu',
+    // Contrib
+    //
+    // Admin
+    'admin',
     // Backup Migrate
     'backup_migrate',
-    // Views
-    'views',
     // Features
     'features',
-    // Context
-    'context', 'context_contrib',
-    // Context UI (used only to look at contexts)
-    'context_ui',
-    // Spaces
-    'spaces',
-    // PURL
-    'purl',
-    // Token
-    'token',
-    // Path Auto
-    'pathauto',
     // Content profile
     'content_profile',
+    // Context
+    'context', 'context_contrib',
+    // Context UI
+    'context_ui',
+    // Pathauto
+    'pathauto',
+    // PURL
+    'purl',
+    // Spaces
+    'spaces',
+    // Token
+    'token',
     // Wysiwyg API
     'wysiwyg',
+    // Views
+    'views',
   );
-
   return $modules;
 }
 
@@ -66,14 +67,18 @@ function dev_profile_profile_modules() {
  */
 function _dev_profile_dev_modules() {
   return array(
-    // Strongarm
-    'strongarm',
     // CCK
     'content', 'content_permissions', 'nodereference', 'optionwidgets', 'number', 'text',
+    // Diff
+    'diff',
     // Features
-    'blog_feature', 'team_feature',
-    // Others
-    'diff', 'wysiwyg_features',
+    'blog_feature', 'team_feature', 'travail_core',
+    // Formats
+    'codefilter', 'markdown', 'typogrify',
+    // Strongarm
+    'strongarm',
+    // Wysiwyg Features
+    'wysiwyg_features',
   );
 }
 
@@ -150,29 +155,13 @@ function dev_profile_profile_tasks(&$task, $url) {
 function _dev_profile_intranet_configure() {
   global $install_locale;
 
-  // Create content profile for user 1
-  variable_get('admin_full_name', NULL);
-  
-  //
-  // create profile
-  // @todo
-  variable_del('admin_full_name');
-
-  /*
   // Remove default input filter formats
   $result = db_query("SELECT * FROM {filter_formats} WHERE name IN ('%s', '%s')", 'Filtered HTML', 'Full HTML');
   while ($row = db_fetch_object($result)) {
     db_query("DELETE FROM {filter_formats} WHERE format = %d", $row->format);
     db_query("DELETE FROM {filters} WHERE format = %d", $row->format);
   }
-
-  // Eliminate the access content perm from anonymous users.
-  db_query("UPDATE {permission} set perm = '' WHERE rid = 1");
-
-  // Create user picture directory
-  $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
-  file_check_directory($picture_path, 1, 'user_picture_path');
-  */
+  
   // Create freetagging vocab
   $vocab = array(
     'name' => 'Keywords',
@@ -189,11 +178,8 @@ function _dev_profile_intranet_configure() {
   taxonomy_save_vocabulary($vocab);
 
   // Set time zone
-  $tz_offset = date('Z');
-  variable_set('date_default_timezone', $tz_offset);
-
-  // Set a default footer message.
-  //variable_set('site_footer', '&copy; 2009 '. l('Development Seed', 'http://www.developmentseed.org', array('absolute' => TRUE)));
+  //$tz_offset = date('Z');
+  //variable_set('date_default_timezone', $tz_offset);
 
   // Set default theme. This needs some more set up on next page load
   // We cannot do everything here because of _system_theme_data() static cache
@@ -202,16 +188,7 @@ function _dev_profile_intranet_configure() {
   variable_set('theme_default', 'singular');
   variable_set('admin_theme', 'rubik');
   variable_set('node_admin_theme', 'rubik');
-
-
-
-  /*
-  // Revert the filter that messaging provides to our default.  
-  $component = 'filter';
-  $module = 'atrium_intranet';
-  module_load_include('inc', 'features', "features.{$component}");
-  module_invoke($component, 'features_revert', $module);
-  */
+  
 }
 
 /**
@@ -253,10 +230,6 @@ function _dev_profile_profile_batch_finished($success, $results) {
 }
 
 /**
- * FORM ALTERS
- */
-
-/**
  * Set the default installation profile.
  */
 function system_form_install_select_profile_form_alter(&$form, $form_state) {
@@ -270,40 +243,4 @@ function system_form_install_select_profile_form_alter(&$form, $form_state) {
  */
 function system_form_install_select_locale_form_alter(&$form, $form_state) {
   $form['locale']['en']['#value'] = 'en';
-}
-
-/**
- * Alter the install profile configuration form and provide timezone location options.
- */
-function system_form_install_configure_form_alter(&$form, $form_state) {
-  
-  $form['admin_account']['account']['fullname'] = array(
-    '#type' => 'textfield',
-    '#title' => 'Full name',
-    '#maxlength' => '60',
-    '#description' => 'The first and last name of the administrator.',
-    '#required' => '1',
-    '#weight' => '-9',
-  );
-  array_push($form['#submit'], '_dev_profile_install_configure_submit');
-  
-  if (function_exists('date_timezone_names') && function_exists('date_timezone_update_site')) {
-    $form['server_settings']['date_default_timezone']['#access'] = FALSE;
-    $form['server_settings']['#element_validate'] = array('date_timezone_update_site');
-    $form['server_settings']['date_default_timezone_name'] = array(
-      '#type' => 'select',
-      '#title' => t('Default time zone'),
-      '#default_value' => NULL,
-      '#options' => date_timezone_names(FALSE, TRUE),
-      '#description' => t('Select the default site time zone. If in doubt, choose the timezone that is closest to your location which has the same rules for daylight saving time.'),
-      '#required' => TRUE,
-    );
-  }
-}
-
-/**
- * Additional submit hook for adding the admin users full name
- */
-function _dev_profile_install_configure_submit($form, &$form_state) {
-  variable_set('admin_full_name', $form_state['values']['account']['fullname']);
 }

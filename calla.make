@@ -1,10 +1,10 @@
 core = 6.x
 
-
 ; Contrib
-projects[] = admin_menu
+projects[admin][version] = "6.2-alpha2"
 projects[] = backup_migrate
 projects[] = cck
+projects[] = codefilter
 projects[] = content_profile
 projects[] = context
 projects[] = diff
@@ -12,11 +12,12 @@ projects[] = features
 projects[] = libraries
 projects[] = pathauto
 projects[] = purl
+projects[] = markdown
 projects[] = schema
-projects[] = simpletest
 projects[] = spaces
 projects[] = strongarm
 projects[] = token
+projects[] = typogrify
 projects[] = wysiwyg
 projects[] = views
 
@@ -35,11 +36,6 @@ projects[singular][location] = http://code.developmentseed.org/fserver
 projects[tao][type] = "theme"
 projects[tao][download][type] = "git"
 projects[tao][download][url] = "git://github.com/sprice/tao.git"
-
-; Patched
-;projects[simpletest][patch] = "http://drupalcode.org/viewvc/drupal/contributions/modules/simpletest/D6-core-simpletest.patch?revision=1.1.2.1&view=co"
-;projects[context][version] = "2.0-beta7"
-;projects[context][patch] = "http://drupal.org/files/issues/context_test_setup.patch"
 
 ; Libraries
 libraries[ckeditor][download][type] = "get"
