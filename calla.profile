@@ -8,17 +8,17 @@
 /**
  * Implementation of hook_profile_details().
  */
-function dev_profile_profile_details() {
+function calla_installation_profile_details() {
   return array(
-    'name' => 'Dev Install Profile',
-    'description' => 'A development install profile created by Shawn Price for Affinity Bridge'
+    'name' => 'Calla',
+    'description' => 'Calla by Affinity Bridge'
   );
 }
 
 /**
  * Implementation of hook_profile_modules().
  */
-function dev_profile_profile_modules() {
+function calla_installation_profile_modules() {
   $modules = array(
      // Drupal core
     'block',
@@ -32,8 +32,6 @@ function dev_profile_profile_modules() {
     'system',
     'taxonomy',
     'user',
-    // Contrib
-    //
     // Admin
     'admin',
     // Backup Migrate
@@ -54,10 +52,10 @@ function dev_profile_profile_modules() {
     'spaces',
     // Token
     'token',
-    // Wysiwyg API
-    'wysiwyg',
     // Views
     'views',
+    // Wysiwyg API
+    'wysiwyg',
   );
   return $modules;
 }
@@ -65,14 +63,14 @@ function dev_profile_profile_modules() {
 /**
  * Returns an array list of features (and supporting) modules.
  */
-function _dev_profile_dev_modules() {
+function _calla_installation_dev_modules() {
   return array(
     // CCK
     'content', 'content_permissions', 'nodereference', 'optionwidgets', 'number', 'text',
     // Diff
     'diff',
     // Features
-    'blog_feature', 'team_feature', 'travail_core',
+    'calla_core', 'calla_blog', 'calla_team',
     // Formats
     'codefilter', 'markdown', 'typogrify',
     // Strongarm
@@ -85,7 +83,7 @@ function _dev_profile_dev_modules() {
 /**
  * Implementation of hook_profile_task_list().
  */
-function dev_profile_profile_task_list() {
+function calla_installation_profile_task_list() {
   $tasks['dev-modules-batch'] = st('Install modules for features');
   $tasks['dev-configure-batch'] = st('Configure installation');
   return $tasks;
@@ -94,7 +92,7 @@ function dev_profile_profile_task_list() {
 /**
  * Implementation of hook_profile_tasks().
  */
-function dev_profile_profile_tasks(&$task, $url) {
+function calla_installation_profile_tasks(&$task, $url) {
   global $profile, $install_locale;
   
   // Just in case some of the future tasks adds some output
@@ -112,13 +110,13 @@ function dev_profile_profile_tasks(&$task, $url) {
   
   // Install some more modules
   if ($task == 'dev-modules') {
-    $modules = _dev_profile_dev_modules();
+    $modules = _calla_installation_dev_modules();
     $files = module_rebuild_cache();
     // Create batch
     foreach ($modules as $module) {
       $batch['operations'][] = array('_install_module_batch', array($module, $files[$module]->info['name']));
     }    
-    $batch['finished'] = '_dev_profile_profile_batch_finished';
+    $batch['finished'] = '_calla_installation_profile_batch_finished';
     $batch['title'] = st('Installing @drupal', array('@drupal' => drupal_install_profile_name()));
     $batch['error_message'] = st('The installation has encountered an error.');
 
@@ -136,9 +134,9 @@ function dev_profile_profile_tasks(&$task, $url) {
   // @todo Review for localization, the time zone cannot be set that way either
   if ($task == 'intranet-configure') {
     $batch['title'] = st('Configuring @drupal', array('@drupal' => drupal_install_profile_name()));
-    $batch['operations'][] = array('_dev_profile_intranet_configure', array());
-    $batch['operations'][] = array('_dev_profile_intranet_configure_check', array());
-    $batch['finished'] = '_dev_profile_intranet_configure_finished';
+    $batch['operations'][] = array('_calla_installation_intranet_configure', array());
+    $batch['operations'][] = array('_calla_installation_intranet_configure_check', array());
+    $batch['finished'] = '_calla_installation_intranet_configure_finished';
     variable_set('install_task', 'dev-configure-batch');
     batch_set($batch);
     batch_process($url, $url);
@@ -152,7 +150,7 @@ function dev_profile_profile_tasks(&$task, $url) {
 /**
  * Configuration. First stage.
  */
-function _dev_profile_intranet_configure() {
+function _calla_installation_intranet_configure() {
   global $install_locale;
 
   // Remove default input filter formats
@@ -194,7 +192,7 @@ function _dev_profile_intranet_configure() {
 /**
  * Configuration. Second stage.
  */
-function _dev_profile_intranet_configure_check() {
+function _calla_installation_intranet_configure_check() {
   // Rebuild key tables/caches
   module_rebuild_cache(); // Detects the newly added bootstrap modules
   node_access_rebuild();
@@ -213,7 +211,7 @@ function _dev_profile_intranet_configure_check() {
  * 
  * @todo Handle error condition
  */
-function _dev_profile_intranet_configure_finished($success, $results) {
+function _calla_installation_intranet_configure_finished($success, $results) {
   variable_set('install_task', 'profile-finished');
     
   // turn off default blocks  
@@ -225,7 +223,7 @@ function _dev_profile_intranet_configure_finished($success, $results) {
  *
  * Advance installer task to language import.
  */
-function _dev_profile_profile_batch_finished($success, $results) {
+function _calla_installation_profile_batch_finished($success, $results) {
   variable_set('install_task', 'intranet-configure');
 }
 
@@ -234,7 +232,7 @@ function _dev_profile_profile_batch_finished($success, $results) {
  */
 function system_form_install_select_profile_form_alter(&$form, $form_state) {
   foreach($form['profile'] as $key => $element) {
-    $form['profile'][$key]['#value'] = 'dev_profile';
+    $form['profile'][$key]['#value'] = 'calla_installation';
   }
 }
 

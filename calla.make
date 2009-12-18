@@ -18,8 +18,8 @@ projects[] = spaces
 projects[] = strongarm
 projects[] = token
 projects[] = typogrify
-projects[] = wysiwyg
 projects[] = views
+projects[] = wysiwyg
 
 ; Custom
 projects[wysiwyg_features][type] = "module"
@@ -39,6 +39,6 @@ projects[tao][download][type] = "git"
 projects[tao][download][url] = "git://github.com/sprice/tao.git"
 
 ; Libraries
-libraries[ckeditor][download][type] = "get"
-libraries[ckeditor][download][url] = "http://downloads.sourceforge.net/project/fckeditor/FCKeditor/2.6.5/FCKeditor_2.6.5.tar.gz"
-libraries[ckeditor][directory_name = "fckeditor"
+libraries[fckeditor][download][type] = "get"
+libraries[fckeditor][download][url] = "http://downloads.sourceforge.net/project/fckeditor/FCKeditor/2.6.5/FCKeditor_2.6.5.tar.gz"
+libraries[fckeditor][directory_name] = "fckeditor"
