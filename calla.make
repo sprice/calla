@@ -27,8 +27,9 @@ projects[wysiwyg_features][download][type] = "git"
 projects[wysiwyg_features][download][url] = "git://github.com/sprice/wysiwyg_features.git"
 
 ; Features
-projects[blog_feature][location] = "http://haikungfu.com/fserver"
-projects[team_feature][location] = "http://haikungfu.com/fserver"
+projects[calla_core][location] = "http://haikungfu.com/fserver"
+projects[calla_blog][location] = "http://haikungfu.com/fserver"
+projects[calla_team][location] = "http://haikungfu.com/fserver"
 
 ; Themes
 projects[rubik][location] = http://code.developmentseed.org/fserver
