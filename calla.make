@@ -30,11 +30,11 @@ projects[wysiwyg_features][download][url] = "git://github.com/sprice/wysiwyg_fea
 
 ; Features
 projects[calla_team][subdir] = "features"
-projects[calla_team][location] = "http://haikungfu.com/fserver"
+projects[calla_team][location] = "http://features.affinitybridge.com/fserver"
 projects[calla_core][subdir] = "features"
-projects[calla_core][location] = "http://haikungfu.com/fserver"
+projects[calla_core][location] = "http://features.affinitybridge.com/fserver"
 projects[calla_blog][subdir] = "features"
-projects[calla_blog][location] = "http://haikungfu.com/fserver"
+projects[calla_blog][location] = "http://features.affinitybridge.com/fserver"
 
 ; Themes
 projects[rubik][location] = http://code.developmentseed.org/fserver
