@@ -1,12 +1,11 @@
 <?php
 // $Id$
-/**
- * Drupal install profile file.
- * atrium_installer.profile used as reference
- */
 
 /**
- * Implementation of hook_profile_details().
+ * Return a description of the profile for the initial installation screen.
+ *
+ * @return
+ *   A keyed array describing this profile.
  */
 function calla_profile_details() {
   return array(
@@ -16,61 +15,47 @@ function calla_profile_details() {
 }
 
 /**
- * Implementation of hook_profile_modules().
+ * Return an array of modules to be enabled
+ *
+ * @return
+ *  An array of modules to be enabled.
  */
 function calla_profile_modules() {
-  $modules = array(
-     // Drupal core
-    'block',
-    'comment',
-    'dblog',
-    'filter',
-    'help',
-    'menu',
-    'node',
-    'path',
-    'system',
-    'taxonomy',
-    'user',
-    // Admin
-    'admin',
-    // Backup Migrate
-    'backup_migrate',
-    // Features
-    'features',
-    // Content profile
-    'content_profile',
-    // Context
-    'context', 'context_contrib',
-    // Context UI
-    'context_ui',
-    // Pathauto
-    'pathauto',
-    // PURL
-    'purl',
-    // Spaces
-    'spaces',
-    // Token
-    'token',
-    // Views
-    'views',
-    // Wysiwyg API
-    'wysiwyg',
+  return array(
+     // Core
+    'block', 'comment', 'dblog', 'filter', 'help', 'menu', 'node', 'path',
+    'system', 'taxonomy', 'user',
+    // Contrib
+    'admin', 'backup_migrate', 'boxes', 'features', 'content_profile', 'context',
+    'context_contrib', 'context_ui', 'ctools', 'install_profile_api',
+    'pathauto', 'purl', 'spaces', 'token', 'views', 'wysiwyg',
   );
-  return $modules;
+}
+
+function pr($var) {
+  echo "<pre>";
+  print_r($var);
+  echo "</pre>";
+}
+
+function _pr($var) {
+  print_r(error_log($var,0),1);
 }
 
 /**
- * Returns an array list of features (and supporting) modules.
+ * Return an array of features and supporting modules to be enabled.
+ *
+ * @return
+ *  An array of features and supporting modules to be enabled.
  */
 function _calla_config_modules() {
   return array(
-    // CCK
+    // Features
+    'calla_core', 'calla_blog', 'calla_team',
+    // Other contrib
     'content', 'content_permissions', 'nodereference', 'number', 'optionwidgets', 'text',
     // Diff
     'diff',
-    // Features
-    'calla_core', 'calla_blog', 'calla_team',
     // Formats
     'codefilter', 'markdown', 'typogrify',
     // Strongarm
@@ -84,18 +69,17 @@ function _calla_config_modules() {
  * Implementation of hook_profile_task_list().
  */
 function calla_profile_task_list() {
-  $tasks['calla-modules-batch'] = st('Install core distribution');
-  $tasks['calla-configure-batch'] = st('Configure distribution');
-  return $tasks;
+  return array(
+    'calla-modules-batch' => st('Install core distribution'),
+    'calla-configure-batch' => st('Configure distribution'),
+  );
 }
 
 /**
  * Implementation of hook_profile_tasks().
  */
 function calla_profile_tasks(&$task, $url) {
-  global $profile, $install_locale;
-  
-  // Just in case some of the future tasks adds some output
+  // In case future tasks add output
   $output = '';
   
   if ($task == 'profile') {
@@ -151,7 +135,6 @@ function calla_profile_tasks(&$task, $url) {
  * Configuration. First stage.
  */
 function _calla_configure() {
-  global $install_locale;
 
   // Remove default input filter formats
   $result = db_query("SELECT * FROM {filter_formats} WHERE name IN ('%s', '%s')", 'Filtered HTML', 'Full HTML');
@@ -176,34 +159,33 @@ function _calla_configure() {
   taxonomy_save_vocabulary($vocab);
 
   // Set time zone
-  //$tz_offset = date('Z');
-  //variable_set('date_default_timezone', $tz_offset);
-
-  // Set default theme. This needs some more set up on next page load
-  // We cannot do everything here because of _system_theme_data() static cache
-  system_theme_data();
-  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'garland');
-  variable_set('theme_default', 'singular');
-  variable_set('admin_theme', 'rubik');
-  variable_set('node_admin_theme', 'rubik');
+  $tz_offset = date('Z');
+  variable_set('date_default_timezone', $tz_offset);
   
+  // Revert key components that are overridden by others on install.
+  $revert = array(
+    'calla_core' => array('user', 'variable', 'filter'),
+    'calla_blog' => array('user', 'variable'),
+    'calla_team' => array('user', 'variable'),
+  );
+  features_revert($revert);
 }
 
 /**
  * Configuration. Second stage.
  */
 function _calla_configure_check() {
-  // Rebuild key tables/caches
-  module_rebuild_cache(); // Detects the newly added bootstrap modules
+
+  // @todo document the following three functions.
   node_access_rebuild();
-  drupal_get_schema(NULL, TRUE); // Clear schema DB cache
-  drupal_flush_all_caches();    
-  system_theme_data();  // Rebuild theme cache.
-   _block_rehash();      // Rebuild block cache.
-  views_invalidate_cache(); // Rebuild the views.
-  // This one is done by the installer alone
-  //menu_rebuild();       // Rebuild the menu.
-  features_rebuild();   // Features rebuild scripts.
+  drupal_flush_all_caches();
+  system_theme_data();
+  
+  db_query("UPDATE {blocks} SET status = 0, region = ''"); // disable all DB blocks
+  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'garland');
+  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme' and name ='%s'", 'singular');
+  variable_set('theme_default', 'singular');
+  variable_set('admin_theme', 'rubik');
 }
 
 /**
@@ -213,9 +195,6 @@ function _calla_configure_check() {
  */
 function _calla_configure_finished($success, $results) {
   variable_set('install_task', 'profile-finished');
-    
-  // turn off default blocks  
-  db_query("UPDATE {blocks} SET status = 0, region = '%s' WHERE theme = '%s'", '', 'garland'); 
 }
 
 /**
@@ -241,4 +220,27 @@ function system_form_install_select_profile_form_alter(&$form, $form_state) {
  */
 function system_form_install_select_locale_form_alter(&$form, $form_state) {
   $form['locale']['en']['#value'] = 'en';
+}
+
+/**
+ * Alter the install profile configuration form and provide timezone location options.
+ */
+function system_form_install_configure_form_alter(&$form, $form_state) {
+  $form['site_information']['site_name']['#default_value'] = 'Calla';
+  $form['site_information']['site_mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
+  $form['admin_account']['account']['name']['#default_value'] = 'admin';
+  $form['admin_account']['account']['mail']['#default_value'] = 'admin@'. $_SERVER['HTTP_HOST'];
+ 
+  if (function_exists('date_timezone_names') && function_exists('date_timezone_update_site')) {
+    $form['server_settings']['date_default_timezone']['#access'] = FALSE;
+    $form['server_settings']['#element_validate'] = array('date_timezone_update_site');
+    $form['server_settings']['date_default_timezone_name'] = array(
+      '#type' => 'select',
+      '#title' => t('Default time zone'),
+      '#default_value' => NULL,
+      '#options' => date_timezone_names(FALSE, TRUE),
+      '#description' => t('Select the default site time zone. If in doubt, choose the timezone that is closest to your location which has the same rules for daylight saving time.'),
+      '#required' => TRUE,
+    );
+  }
 }
