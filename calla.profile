@@ -26,9 +26,9 @@ function calla_profile_modules() {
     'block', 'comment', 'dblog', 'filter', 'help', 'menu', 'node', 'path',
     'system', 'taxonomy', 'user',
     // Contrib
-    'admin', 'backup_migrate', 'boxes', 'features', 'content_profile', 'context',
-    'context_contrib', 'context_ui', 'ctools', 'install_profile_api',
-    'pathauto', 'purl', 'spaces', 'token', 'views', 'wysiwyg',
+    'admin', 'backup_migrate', 'boxes', 'features', 'content_profile',
+    'context', 'context_ui', 'ctools', 'install_profile_api', 'pathauto',
+    'purl', 'spaces', 'token', 'views', 'wysiwyg',
   );
 }
 
@@ -70,8 +70,8 @@ function _calla_config_modules() {
  */
 function calla_profile_task_list() {
   return array(
-    'calla-modules-batch' => st('Install core distribution'),
-    'calla-configure-batch' => st('Configure distribution'),
+    'calla-modules-batch' => st('Install Calla'),
+    'calla-configure-batch' => st('Configure Calla'),
   );
 }
 
