@@ -83,9 +83,9 @@ projects[singular][location] = http://code.developmentseed.org/fserver
 projects[tao][location] = http://code.developmentseed.org/fserver
 
 ; Libraries
-libraries[fckeditor][download][type] = "get"
-libraries[fckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%203.2/ckeditor_3.2.tar.gz"
-libraries[fckeditor][directory_name] = "ckeditor"
+libraries[ckeditor][download][type] = "get"
+libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%203.2/ckeditor_3.2.tar.gz"
+libraries[ckeditor][directory_name] = "ckeditor"
 libraries[jquery_ui][download][type] = "get"
 libraries[jquery_ui][download][url] = "http://jquery-ui.googlecode.com/files/jquery.ui-1.6.zip"
 libraries[jquery_ui][directory_name] = "jquery.ui"
