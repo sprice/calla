@@ -51,7 +51,7 @@ function _pr($var) {
 function _calla_config_modules() {
   return array(
     // Features
-    'calla_core', 'calla_blog', 'calla_team',
+    //'calla_core', 'calla_blog', 'calla_team',
     // Other contrib
     'content', 'content_permissions', 'nodereference', 'number', 'optionwidgets', 'text',
     // Diff
@@ -61,7 +61,7 @@ function _calla_config_modules() {
     // Strongarm
     'strongarm',
     // Wysiwyg Features
-    'wysiwyg_features',
+    //'wysiwyg_features',
   );
 }
 
@@ -114,8 +114,6 @@ function calla_profile_tasks(&$task, $url) {
   }
 
   // Run additional configuration tasks
-  // @todo Review all the cache/rebuild options at the end, some of them may not be needed
-  // @todo Review for localization, the time zone cannot be set that way either
   if ($task == 'calla-configure') {
     $batch['title'] = st('Configuring @drupal', array('@drupal' => drupal_install_profile_name()));
     $batch['operations'][] = array('_calla_configure', array());
@@ -176,7 +174,6 @@ function _calla_configure() {
  */
 function _calla_configure_check() {
 
-  // @todo document the following three functions.
   node_access_rebuild();
   drupal_flush_all_caches();
   system_theme_data();
