@@ -135,11 +135,13 @@ function calla_profile_tasks(&$task, $url) {
 function _calla_configure() {
 
   // Remove default input filter formats
+  /*
   $result = db_query("SELECT * FROM {filter_formats} WHERE name IN ('%s', '%s')", 'Filtered HTML', 'Full HTML');
   while ($row = db_fetch_object($result)) {
     db_query("DELETE FROM {filter_formats} WHERE format = %d", $row->format);
     db_query("DELETE FROM {filters} WHERE format = %d", $row->format);
   }
+  */
   
   // Create freetagging vocab
   $vocab = array(
